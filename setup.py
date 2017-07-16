@@ -15,21 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-import os
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
 
 metadata = {}
 exec(compile(open("bottlenose/metadata.py").read(), "bottlenose/metadata.py", 'exec'), metadata)
 
 install_requires = []
-if sys.version_info < (2, 6):
-    # Python 2.6 was the first version to come bundled with the json module.
-    install_requires.append("simplejson>=1.7.1")
 
 # http://pypi.python.org/pypi?:action=list_classifiers
 classifiers = [
@@ -43,10 +34,6 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",
     "Topic :: Utilities",
     "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python :: 2.4",
-    "Programming Language :: Python :: 2.5",
-    "Programming Language :: Python :: 2.6",
-    "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5"
 ]
