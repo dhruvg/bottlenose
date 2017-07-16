@@ -121,7 +121,7 @@ class AmazonCall(Call):
             raise AmazonError("The `Style` parameter has been discontinued by"
                               " AWS. Please remove all references to it and"
                               " reattempt your request.")
-        super(AmazonCall, self).__call__(**kwargs)
+        return super(AmazonCall, self).__call__(**kwargs)
 
 
 class Amazon(AmazonCall):
