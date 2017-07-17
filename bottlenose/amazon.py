@@ -32,11 +32,11 @@ class AmazonError(Exception):
 
 class AmazonCall(Call):
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
-                 associate_tag=None, operation=None, version="2013-08-01", region=None,
-                 timeout=None, max_qps=None, parser=None,
+                 associate_tag=None, version="2013-08-01", region=None,
+                 operation=None, timeout=None, max_qps=None, parser=None,
                  cache_reader=None, cache_writer=None,
                  error_handler=None, last_query_time=None):
-        super(AmazonCall, self).__init__(timeout, max_qps, parser,
+        super(AmazonCall, self).__init__(operation, timeout, max_qps, parser,
                                          cache_reader, cache_writer,
                                          error_handler, last_query_time)
 
@@ -46,7 +46,6 @@ class AmazonCall(Call):
                                       os.environ.get('AWS_SECRET_ACCESS_KEY'))
         self.associate_tag = (associate_tag or
                               os.environ.get('AWS_ASSOCIATE_TAG'))
-        self.operation = operation
         self.version = version
         self.region = region
 
@@ -56,8 +55,8 @@ class AmazonCall(Call):
         except:
             return AmazonCall(self.aws_access_key_id, self.aws_secret_access_key,
                               self.associate_tag,
-                              operation=k, version=self.version,
-                              region=self.region, timeout=self.timeout,
+                              version=self.version, region=self.region,
+                              operation=k, timeout=self.timeout,
                               max_qps=self.max_qps, parser=self.parser,
                               cache_reader=self.cache_reader,
                               cache_writer=self.cache_writer,
@@ -126,8 +125,8 @@ class AmazonCall(Call):
 
 class Amazon(AmazonCall):
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
-                 associate_tag=None, operation=None, version="2013-08-01",
-                 region="US", timeout=None, max_qps=None, parser=None,
+                 associate_tag=None, version="2013-08-01", region="US",
+                 operation=None, timeout=None, max_qps=None, parser=None,
                  cache_reader=None, cache_writer=None, error_handler=None):
         """
         Create an Amazon API object.
@@ -140,14 +139,13 @@ class Amazon(AmazonCall):
                                environment variable $AWS_SECRET_ACCESS_KEY
         associate_tag: Your "username" for the Amazon Affiliate program,
                        sent with API queries.
-        operation: API operation.
         version: API version. The default should work.
         region: ccTLD you want to search for products on (e.g. 'UK'
                 for amazon.co.uk). Must be uppercase. Default is 'US'.
         """
         AmazonCall.__init__(self, aws_access_key_id, aws_secret_access_key,
-                            associate_tag, operation, version=version,
-                            region=region, timeout=timeout,
+                            associate_tag, version=version,
+                            region=region, operation=operation, timeout=timeout,
                             max_qps=max_qps, parser=parser,
                             cache_reader=cache_reader,
                             cache_writer=cache_writer,

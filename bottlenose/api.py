@@ -32,10 +32,11 @@ def quote_query(query):
 
 
 class Call(object):
-    def __init__(self, timeout=None, max_qps=None, parser=None,
-                 cache_reader=None, cache_writer=None,
+    def __init__(self, operation=None, timeout=None, max_qps=None,
+                 parser=None, cache_reader=None, cache_writer=None,
                  error_handler=None, last_query_time=None):
         """
+        operation: optional API operation.
         timeout: optional timeout for queries
         max_qps: optional maximum queries per second. If we've made an API call
                  on this object more recently that 1/MaxQPS, we'll wait
@@ -66,6 +67,7 @@ class Call(object):
         last_query_time: Last query timestamp.
         """
 
+        self.operation = operation
         self.cache_reader = cache_reader
         self.cache_writer = cache_writer
         self.error_handler = error_handler
