@@ -31,6 +31,9 @@ class AmazonError(Exception):
 
 
 class AmazonCall(Call):
+    """
+    A call to the Amazon Product Advertising API.
+    """
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
                  associate_tag=None, version="2013-08-01", region=None,
                  operation=None, timeout=None, max_qps=None, parser=None,

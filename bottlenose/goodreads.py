@@ -4,11 +4,10 @@ from bottlenose import Call, quote_query
 GOODREADS_DOMAIN = "www.goodreads.com"
 
 
-class GoodreadsError(Exception):
-    pass
-
-
 class GoodreadsCall(Call):
+    """
+    A call to the Goodreads API.
+    """
     def __init__(self, goodreads_api_key=None, operation=None,
                  timeout=None, max_qps=None, parser=None,
                  cache_reader=None, cache_writer=None,
@@ -41,7 +40,11 @@ class GoodreadsCall(Call):
 
     def cache_url(self, **kwargs):
         """A simplified URL to be used for caching the given query."""
-        return self.api_url(**kwargs)
+        query = kwargs
+        quoted_strings = quote_query(query)
+
+        return ("https://" + GOODREADS_DOMAIN + "/" + self.operation +
+                "/index.xml?" + quoted_strings)
 
 
 class Goodreads(GoodreadsCall):
@@ -52,9 +55,10 @@ class Goodreads(GoodreadsCall):
         Create an Goodreads API object.
 
         goodreads_api_key: Your Goodreads API Key, sent with API queries.
-        operation: API operation.
         """
         GoodreadsCall.__init__(self, goodreads_api_key, operation=operation,
                                timeout=timeout, max_qps=max_qps, parser=parser,
                                cache_reader=cache_reader, cache_writer=cache_writer,
                                error_handler=error_handler)
+
+__all__ = ["Goodreads"]
