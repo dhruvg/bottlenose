@@ -11,10 +11,10 @@ class GoodreadsCall(Call):
     def __init__(self, goodreads_api_key=None, operation=None,
                  timeout=None, max_qps=None, parser=None,
                  cache_reader=None, cache_writer=None,
-                 error_handler=None, last_query_time=None):
+                 error_handler=None, max_retries=5, last_query_time=None):
         super(GoodreadsCall, self).__init__(operation, timeout, max_qps, parser,
                                             cache_reader, cache_writer,
-                                            error_handler, last_query_time)
+                                            error_handler, max_retries, last_query_time)
 
         self.goodreads_api_key = goodreads_api_key
 
@@ -28,6 +28,7 @@ class GoodreadsCall(Call):
                                  cache_reader=self.cache_reader,
                                  cache_writer=self.cache_writer,
                                  error_handler=self.error_handler,
+                                 max_retries=self.max_retries,
                                  last_query_time=self._last_query_time)
 
     def api_url(self, **kwargs):
@@ -50,7 +51,8 @@ class GoodreadsCall(Call):
 class Goodreads(GoodreadsCall):
     def __init__(self, goodreads_api_key=None, operation=None,
                  timeout=None, max_qps=None, parser=None,
-                 cache_reader=None, cache_writer=None, error_handler=None):
+                 cache_reader=None, cache_writer=None, error_handler=None,
+                 max_retries=5):
         """
         Create an Goodreads API object.
 
@@ -59,6 +61,6 @@ class Goodreads(GoodreadsCall):
         GoodreadsCall.__init__(self, goodreads_api_key, operation=operation,
                                timeout=timeout, max_qps=max_qps, parser=parser,
                                cache_reader=cache_reader, cache_writer=cache_writer,
-                               error_handler=error_handler)
+                               error_handler=error_handler, max_retries=max_retries)
 
 __all__ = ["Goodreads"]

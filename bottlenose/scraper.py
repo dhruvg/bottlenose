@@ -7,10 +7,10 @@ class ScraperCall(Call):
     """
     def __init__(self, operation=None, timeout=None, max_qps=None,
                  parser=None, cache_reader=None, cache_writer=None,
-                 error_handler=None, last_query_time=None):
+                 error_handler=None, max_retries=5, last_query_time=None):
         super(ScraperCall, self).__init__(operation, timeout, max_qps, parser,
                                           cache_reader, cache_writer,
-                                          error_handler, last_query_time)
+                                          error_handler, max_retries, last_query_time)
 
     def __getattr__(self, k):
         try:
@@ -21,6 +21,7 @@ class ScraperCall(Call):
                                cache_reader=self.cache_reader,
                                cache_writer=self.cache_writer,
                                error_handler=self.error_handler,
+                               max_retries=self.max_retries,
                                last_query_time=self._last_query_time)
 
     def api_url(self, **kwargs):
@@ -34,13 +35,14 @@ class ScraperCall(Call):
 
 class Scraper(ScraperCall):
     def __init__(self, operation=None, timeout=None, max_qps=None, parser=None,
-                 cache_reader=None, cache_writer=None, error_handler=None):
+                 cache_reader=None, cache_writer=None, error_handler=None,
+                 max_retries=5):
         """
         Create a Scraper object.
         """
         ScraperCall.__init__(self, operation=operation,
                              timeout=timeout, max_qps=max_qps, parser=parser,
                              cache_reader=cache_reader, cache_writer=cache_writer,
-                             error_handler=error_handler)
+                             error_handler=error_handler, max_retries=max_retries)
 
 __all__ = ["Scraper"]

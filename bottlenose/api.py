@@ -34,7 +34,7 @@ def quote_query(query):
 class Call(object):
     def __init__(self, operation=None, timeout=None, max_qps=None,
                  parser=None, cache_reader=None, cache_writer=None,
-                 error_handler=None, last_query_time=None):
+                 error_handler=None, max_retries=5, last_query_time=None):
         """
         operation: optional API operation.
         timeout: optional timeout for queries
@@ -64,6 +64,7 @@ class Call(object):
                        If this returns true, the call will be retried
                        (you generally want to wait some time before
                        returning, in this case)
+        max_retries: Max retries.
         last_query_time: Last query timestamp.
         """
 
@@ -74,6 +75,7 @@ class Call(object):
         self.max_qps = max_qps
         self.parser = parser
         self.timeout = timeout
+        self.max_retries = max_retries
 
         # put this in a list so it can be shared between instances
         self._last_query_time = last_query_time or [None]
@@ -97,6 +99,7 @@ class Call(object):
         err_env is a dict of additional info passed to the error handler
         """
         while True:  # may retry on error
+            attempt = 1
             api_request = request.Request(
                 api_url, headers={"Accept-Encoding": "gzip"})
 
@@ -106,7 +109,7 @@ class Call(object):
                 # the simple way
                 return request.urlopen(api_request, timeout=self.timeout)
             except:
-                if not self.error_handler:
+                if not self.error_handler or attempt > self.max_retries:
                     raise
 
                 exception = sys.exc_info()[1]
