@@ -145,7 +145,8 @@ class Call(object):
         response = self._call_api(api_url, {'api_url': api_url, 'cache_url': cache_url})
 
         # decompress the response if need be
-        if "gzip" in response.info().get("Content-Encoding"):
+        content_encoding = response.info().get("Content-Encoding")
+        if content_encoding and "gzip" in content_encoding:
             response_text = gzip.decompress(response.read())
         else:
             response_text = response.read()
