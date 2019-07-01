@@ -99,8 +99,9 @@ class Call(object):
 
         err_env is a dict of additional info passed to the error handler
         """
+        attempt = 0
         while True:  # may retry on error
-            attempt = 1
+            attempt += 1
             api_request = request.Request(
                 api_url, headers={"Accept-Encoding": "gzip",
                                   "User-Agent": random_desktop_user_agent()})
